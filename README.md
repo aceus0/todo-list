@@ -1,2 +1,2 @@
 # todo-list
-Resturant page project for The Odin Project
+todo list project for The Odin Project
