@@ -1,17 +1,20 @@
+import './style.css';
 import TodoFactory from "./todos/todo";
+import DomManipulator from './dom/dom';
 
 
 const WebController = () => {
-    const todoFac = TodoFactory();
-    // const domManager = DomFactory();
+    const newTask = document.getElementById(`new-task`);  
 
-    todoFac.todoMaker(`1`,`2`,`3`,`4`,`5`,`6`);
-    todoFac.todoMaker(`1`,`2`,`3`,`4`,`5`,`6`);
-    todoFac.todoMaker(`1`,`2`,`3`,`4`,`5`,`6`);
-    todoFac.todoMaker(`1`,`2`,`3`,`4`,`5`,`6`);
-    console.log(todoFac.getList());
-    todoFac.todoRemover(0);
-    console.log(todoFac.getList());
+    const todoFac = TodoFactory();
+    const domManager = DomManipulator();
+
+    newTask.addEventListener(`click`, (e) => {
+        let complete = domManager.newTask();
+        console.log(complete);
+    })
+
+
 
 
 
