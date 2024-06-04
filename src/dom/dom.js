@@ -1,21 +1,22 @@
 
 const DomManipulator = () => {
     const content = document.querySelector(`#content`);
+    let newItem = null;
+    let id = 0;
 
     const storedObj = (data) => {
-        let newItem = data;
+        newItem = data;
         console.log(`It stored!`);
-        console.table(newItem);
         return newItem;
     }
 
-    
+
 
     const renderPage = (list) => {
         
     }
 
-    const newTask = (callback) => {
+    const newTask = (func1, func2) => {
         const form = document.createElement('form');
         form.setAttribute(`id`, `task-form`);
         form.innerHTML = `
@@ -41,6 +42,7 @@ const DomManipulator = () => {
                 <button id="saveBtn" value="default">save</button>
             </div>
         `;
+
         form.addEventListener('click', (e) => {
             if (e.target.id === "cancelBtn"){
                 e.preventDefault();
@@ -56,21 +58,24 @@ const DomManipulator = () => {
                 deleteBtn.setAttribute(`id`, `delete-button`);
                 deleteBtn.textContent = `Delete Task`
                 
-                form.innerHTML = `
+                form.innerHTML = 
+                `
                 <h1>Title: ${title}</h1>
                 <p>Category: ${category}</p>
                 <p>Due Date: ${dueDate}</p>
-                <p>Description: ${description}</p>`;
+                <p>Description: ${description}</p>
+                `;
 
-                const taskData = {title, description, dueDate, category};
-                callback(taskData);
+                const taskData = {title, description, dueDate, category, id};
+                func1(taskData);
 
                 form.appendChild(deleteBtn);
                 deleteBtn.addEventListener(`click`, (e) => {
                     e.preventDefault();
+                    func2(taskData.id);
                     form.remove();
                 })
-                
+                ++id;
             }
         });
         content.appendChild(form);
