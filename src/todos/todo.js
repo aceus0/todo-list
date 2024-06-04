@@ -7,18 +7,19 @@ const TodoFactory = () => {
     }
 
     class Todo {
-        constructor(title, description, dueDate, category, id) {
+        constructor(title, description, dueDate, category, priority, id) {
             this.title = title;
             this.description = description;
             this.dueDate = dueDate;
             this.category = category;
+            this.priority = priority;
             this.id = id;
         }
 
     }
 
     const todoMaker = (object) => {
-        const todo = new Todo(object.title, object.description, object.dueDate, object.category, object.id); 
+        const todo = new Todo(object.title, object.description, object.dueDate, object.category, object.priority, object.id); 
         todoList.push(todo);
         console.log(todo);
         logger(`Item added to list.`)
