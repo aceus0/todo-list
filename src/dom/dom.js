@@ -2,14 +2,20 @@
 const DomManipulator = () => {
     const content = document.querySelector(`#content`);
 
+    const storedObj = (data) => {
+        let newItem = data;
+        console.log(`It stored!`);
+        console.table(newItem);
+        return newItem;
+    }
 
+    
 
     const renderPage = (list) => {
         
     }
 
-    const newTask = () => {
-        let taskData;
+    const newTask = (callback) => {
         const form = document.createElement('form');
         form.setAttribute(`id`, `task-form`);
         form.innerHTML = `
@@ -54,21 +60,26 @@ const DomManipulator = () => {
                 <h1>Title: ${title}</h1>
                 <p>Category: ${category}</p>
                 <p>Due Date: ${dueDate}</p>
-                <p>Description: ${description}</p>
-            `;
+                <p>Description: ${description}</p>`;
+
+                const taskData = {title, description, dueDate, category};
+                callback(taskData);
+
                 form.appendChild(deleteBtn);
                 deleteBtn.addEventListener(`click`, (e) => {
                     e.preventDefault();
                     form.remove();
                 })
-                taskData = {title, category, dueDate, description};
+                
             }
         });
         content.appendChild(form);
-        return taskData;
     }
 
-    return { newTask };
+    return { 
+        newTask,
+        storedObj
+         };
 }
 
 export default DomManipulator;
