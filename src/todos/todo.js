@@ -1,6 +1,12 @@
 const TodoFactory = () => {
     
-    const todoList = [];
+    let todoList = JSON.parse(localStorage.getItem(`todoStorage`));
+    
+    console.log(todoList); 
+
+    if (todoList === null){
+        todoList = [];
+    }
 
     const logger = (msg) => {
         console.log(msg);
@@ -18,10 +24,17 @@ const TodoFactory = () => {
 
     }
 
+    const todoStore = () => {
+        localStorage.setItem(`todoStorage`, JSON.stringify(todoList));
+        console.log(`Modified todo list stored locally.`)
+    }
+
+
     const todoMaker = (object) => {
         const todo = new Todo(object.title, object.description, object.dueDate, object.category, object.priority, object.id); 
         todoList.push(todo);
         console.log(todo);
+        todoStore();
         logger(`Item added to list.`)
     }
 
@@ -34,6 +47,7 @@ const TodoFactory = () => {
             }
         }
         logger(`Item Removed.`);
+        todoStore();
         console.table(todoList);
     }
 

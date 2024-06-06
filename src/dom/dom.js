@@ -1,10 +1,17 @@
 
 const DomManipulator = () => {
     const content = document.querySelector(`#content`);
+    let newItem = null;
     let id = 0;
     let currentPage;
 
     let taskWizard = false;
+
+    const storedObj = (data) => {
+        newItem = data;
+        console.log(`It stored!`);
+        return newItem;
+    }
 
     const taskCardBuilder = (taskData, deleteTaskFunc, todoAdd) => {
         if (taskData.category != currentPage.id) {
@@ -12,10 +19,14 @@ const DomManipulator = () => {
                 return;
             }
         }
+        console.log(`was called!!!`);
 
         const form = document.createElement('form');
         form.setAttribute(`id`, `task-form`);
-        form.setAttribute(`class`, `task-form`);
+        form.setAttribute(`class`, `todo`);
+
+        const wrapper = document.createElement('div');
+        wrapper.setAttribute(`class`, `todo-wrapper`);
 
         const modifyBtn = document.createElement(`button`);
         modifyBtn.setAttribute(`id`, `modify-button`);
@@ -25,7 +36,7 @@ const DomManipulator = () => {
         deleteBtn.setAttribute(`id`, `delete-button`);
         deleteBtn.textContent = `Delete Task`; 
         
-        form.innerHTML = 
+        wrapper.innerHTML = 
         `
         <h1>Title: ${taskData.title}</h1>
         <p>Priority: ${taskData.priority}</p>
@@ -34,8 +45,9 @@ const DomManipulator = () => {
         <p>Description: ${taskData.description}</p>
         `;
 
+        form.appendChild(wrapper);
         content.appendChild(form);
-        form.appendChild(deleteBtn);
+        wrapper.appendChild(deleteBtn);
 
         deleteBtn.addEventListener(`click`, (e) => {
             e.preventDefault();
@@ -43,7 +55,7 @@ const DomManipulator = () => {
             form.remove();
         })
 
-        form.appendChild(modifyBtn);
+        wrapper.appendChild(modifyBtn);
         modifyBtn.addEventListener(`click`, (e) => {
             e.preventDefault();
             form.remove();
@@ -51,7 +63,7 @@ const DomManipulator = () => {
         })
     }
 
-    const renderPage = (todoRemove, todoAdd, firstRun) => {
+    const renderPage = (getListFunc, todoRemove, todoAdd, firstRun) => {
         firstRun = firstRun || 0;
 
         const priority = document.getElementById(`Priority`)
@@ -62,12 +74,15 @@ const DomManipulator = () => {
         const yearly = document.getElementById(`Yearly`);
 
 
+        let taskList = getListFunc();
+        console.table(taskList)
+        console.log(taskList[0]);
 
         const taskSorter = (category, list, criteria, mode) => {
             currentPage.style.color = `red`;
             if (currentPage.id == category) {
                 taskWizard = false;
-            [...document.getElementsByClassName("task-form")].map(n => n && n.remove());
+            [...document.getElementsByClassName("todo")].map(n => n && n.remove());
             [...document.getElementsByClassName("")].map(n => n && n.remove());
             
             switch(mode) {
@@ -99,12 +114,14 @@ const DomManipulator = () => {
             currentPage = priority;
             taskSorter(priority.id, taskList, `Priority`, 1);
             firstRun = 0;
+            console.log(currentPage.id);
         }
 
         priority.addEventListener(`click`, (e) => {
             currentPage.style.color = `white`;
             currentPage = priority;
             taskSorter(priority.id, taskList, `Priority`, 1);
+            console.log(currentPage.id);
             }
         )
 
@@ -112,6 +129,7 @@ const DomManipulator = () => {
             currentPage.style.color = `white`;
             currentPage = daily;
             taskSorter(daily.id, taskList, `Daily`, 2);
+            console.log(currentPage.id);
             }
         )
 
@@ -119,6 +137,7 @@ const DomManipulator = () => {
             currentPage.style.color = `white`;
             currentPage = weekly;
             taskSorter(weekly.id, taskList, `Weekly`, 2);
+            console.log(currentPage.id);
         }
         )
 
@@ -126,6 +145,7 @@ const DomManipulator = () => {
             currentPage.style.color = `white`;
             currentPage = monthly;
             taskSorter(monthly.id, taskList, `Monthly`, 2);
+            console.log(currentPage.id);
         }
         )
 
@@ -133,6 +153,7 @@ const DomManipulator = () => {
             currentPage.style.color = `white`;
             currentPage = yearly;
             taskSorter(yearly.id, taskList, `Yearly`, 2);
+            console.log(currentPage.id);
         }
         )
     }
@@ -146,10 +167,11 @@ const DomManipulator = () => {
         form.setAttribute(`id`, `task-form`);
         form.setAttribute(`class`, `task-form`);
         form.innerHTML = `
+        <div class="form-create">
             <h1>New Task</h1>
             <p>
                 <label for="title">Title:</label>
-                <input type="text" id="title">
+                <input type="text" id="title" style="width 25px">
             </p>
             <p>
                 <label for="priority">Priority:</label>
@@ -171,12 +193,13 @@ const DomManipulator = () => {
             </p>
             <p>
                 <label for="description">Description:</label>
-                <textarea id="description" rows="3" cols="50"></textarea>
+                <textarea id="description" style="display:flex;"></textarea>
             </p>
             <div>
                 <button id="cancelBtn" value="cancel" formmethod="dialog">Cancel</button>
                 <button id="saveBtn" value="default">save</button>
             </div>
+        </div>
         `;
 
         form.addEventListener('click', (e) => {
@@ -192,6 +215,8 @@ const DomManipulator = () => {
                 const description = document.querySelector('#description').value;
                 
                 let priority = document.querySelector('#priority').checked;
+
+                console.log(priority);
 
                 if (priority != true) {
                     priority = `No`;
@@ -274,6 +299,7 @@ const DomManipulator = () => {
                     } else {
                         priority = `Yes`;
                     }
+                    console.log(priority)
                     
                     form.remove();
                     const taskData = {title, description, dueDate, category, priority, id};
@@ -289,6 +315,7 @@ const DomManipulator = () => {
 
     return { 
         newTask,
+        storedObj,
         renderPage
          };
 }
